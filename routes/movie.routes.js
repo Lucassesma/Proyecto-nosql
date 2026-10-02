@@ -12,6 +12,50 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/id/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const movie = await Movie.findById(id);
+    if (movie) {
+      return res.status(200).json(movie);
+    } else {
+      return res.status(404).json('No se encontró ninguna película con ese id');
+    }
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get('/title/:title', async (req, res, next) => {
+  try {
+    const { title } = req.params;
+    const movies = await Movie.find({ title });
+    return res.status(200).json(movies);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get('/genre/:genre', async (req, res, next) => {
+  try {
+    const { genre } = req.params;
+    const movies = await Movie.find({ genre });
+    return res.status(200).json(movies);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get('/year/:year', async (req, res, next) => {
+  try {
+    const { year } = req.params;
+    const movies = await Movie.find({ year: { $gt: Number(year) } });
+    return res.status(200).json(movies);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post('/', async (req, res, next) => {
   try {
     const newMovie = new Movie({
